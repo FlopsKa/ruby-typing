@@ -18,9 +18,13 @@ end
 result = ""
 links.each do |link|
   puts "Opening #{link}"
+  begin
   doc = Nokogiri::HTML(open(link))
   result += doc.xpath("//text()").to_s
   puts result
+  rescue OpenURI::HTTPError, Errno::ENOENT => e
+    puts e
+  end
 end
 
 out = Hash.new(0)
