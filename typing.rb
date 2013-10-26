@@ -43,22 +43,6 @@ module Typing::Controllers
       { :words => @words }.to_json
     end
   end
-
-  class JQuery < R '/js/jquery-1.10.2.js'
-    JQUERY = File.read(File.dirname(__FILE__) + '/jquery-1.10.2.js')
-    def get
-      @headers['Content-Type'] = "application/javascript"
-      JQUERY
-    end
-  end
-
-  class JavaScript < R '/js/script\.js'
-    SCRIPT = File.read(File.dirname(__FILE__) + '/script.js')
-    def get
-      @headers['Content-Type'] = "application/javascript"
-      SCRIPT
-    end
-  end
 end
 
 module Typing::Views
@@ -66,19 +50,42 @@ module Typing::Views
     html do
       head do
         title { "Ruby Typing Trainer" }
+        link :rel => "stylesheet", :type => "text/css", :href => "css/bootstrap.min.css"
       end
-      body { self << yield }
+      body do
+        div :class => "wrap container" do
+          div :class => "page-header row" do
+            div :class => "col-md-8 col-xs-4" do
+              a :href => "#" do 
+                img :src => "images/ruby-typist.png"
+              end
+            end
+            div :class => "col-md-4 col-xs-8", :style => "padding-top: 10px" do
+              ul class: "nav nav-pills" do
+                li.active { a "Home", :href => "#" }
+                li { a "About", :href => "#" }
+                li { a "Fork me on GitHub", :href => "#" }
+              end
+            end
+          end
+          self << yield
+        end
+      end
     end
   end
 
   def index
-    p.speedtest_wordlist! { "Those are the words you have to enter" }
-    form do
-      input.speedtest_input! :onkeypress => "setTimeout(check_word, 0)"
+    div.row do
+      div :class => "col-md-8 col-md-offset-2 col-xs-12" do
+        form :class => "form-group" do
+          label.speedtest_wordlist! "Those are the words you have to enter"
+          input :autofocus => "", :id => "speedtest_input", :class => "form-control", :onkeypress => "setTimeout(check_word, 0)"
+        end
+        p.speedtest_result! { "Right Words: <br /> Wrong Words:" }
+        script :src => "js/jquery-1.10.2.js"
+        script :src => "js/typing.js"
+      end
     end
-    p.speedtest_result! { "Right Words: <br /> Wrong Words:" }
-    script :src => "js/jquery-1.10.2.js"
-    script :src => "js/script.js"
   end
 end
 
