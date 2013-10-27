@@ -1,3 +1,4 @@
+var right_words = 0;
 var keystrokes = 1;
 var speed = 0;
 var timer_running = false;
@@ -28,7 +29,10 @@ function calculate_speed() {
     // extrapolate keystrokes 
     var strokes_per_minute = keystrokes / (60 - time) * 60;
     var wpm = strokes_per_minute / 5; 
-    $('.progress-bar').css("width", wpm / 200 * 100 + "%")
+    if(!isNaN(wpm)) {
+      $('.progress-bar').css("width", wpm / 200 * 100 + "%");
+      $('#speedtest_wpm').text(wpm.toFixed(0) + "wpm");
+    }
 }
 function check_word() {
   var input = input_field.val();
@@ -42,16 +46,24 @@ function check_word() {
 
   if(time === 60 && !timer_running) {
     timer_running = true;
-    setInterval(function() { if(time > 0) time -= 1; show_timer() }, 1000);
+    setInterval(function() { time > 0 ? time -= 1 : timer_up(); show_timer() }, 1000);
   }
   print_task();
 }
+
+function timer_up() {
+  console.log("Keystrokes: " + keystrokes);
+  console.log("Right: " + right_words);
+  $('#speedtest_result').html("<ul><li>Keystrokes: " + keystrokes + "</li><li>WPM: " + (keystrokes / 5) + 
+      "</li><li>Right Words: " + right_words + "</li><li>Wrong words: " + (80 - right_words) + "</li></ul>");
+}
+
 $().ready(show_timer());
 
 function print_task() {
   var wordlist = $('#speedtest_wordlist');
   var output = "";
-  var right_words = 0;
+  right_words = 0;
   keystrokes = 0;
   for(var i = 0; i < input_words.length; i++) {
     if(check_current_word(input_words[i], i)) {
@@ -68,7 +80,6 @@ function print_task() {
   calculate_speed();
   output += all_words.slice(curr_word, all_words.length).join(" ");
   wordlist.html(output);
-  $('#speedtest_result').text("Right Words: " + right_words);
 }
 
 function check_current_word(word, word_position) {

@@ -81,7 +81,8 @@ module Typing::Views
           p.speedtest_wordlist! "Those are the words you have to enter"
           div.progress do
             div class: "progress-bar", role: "progressbar", :'aria-valuenow' => "60", 
-              :'aria-valuemin' => "0", :'aria-valuemax' => "200", :style => "width: 60%;" do
+              :'aria-valuemin' => "0", :'aria-valuemax' => "200", :style => "width: 60%; text-align: left;" do
+              span.speedtest_wpm! "60%", :style => "margin-left: 10px;"
             end
           end
           div class: "input-group" do
@@ -89,7 +90,7 @@ module Typing::Views
             span "00", class: "timer input-group-addon"
           end
         end
-        p.speedtest_result! { "Right Words: <br /> Wrong Words:" }
+        p.speedtest_result! { "" }
         script :src => "js/jquery-1.10.2.js", type: "text/javascript"
         script :src => "js/typing.js", type: "text/javascript"
       end
