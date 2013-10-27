@@ -85,8 +85,8 @@ module Typing::Views
           end
         end
         p.speedtest_result! { "Right Words: <br /> Wrong Words:" }
-        script :src => "js/jquery-1.10.2.js"
-        script :src => "js/typing.js"
+        script :src => "js/jquery-1.10.2.js", type: "text/javascript"
+        script :src => "js/typing.js", type: "text/javascript"
       end
     end
   end

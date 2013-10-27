@@ -1,4 +1,6 @@
-var start_time = 0;
+var speed = 0;
+var timer_running = false;
+var time = 60;
 var all_words = [];
 var input_words = [];
 var curr_word = 0;
@@ -18,7 +20,11 @@ $.ajax({
 });
 
 function show_timer() {
-  $('.timer').text('60');
+  $('.timer').text(time >= 10 ? time : "0" + time);
+}
+
+function calculate_speed() {
+  console.log("Current speed: " + speed);
 }
 
 function check_word() {
@@ -31,9 +37,13 @@ function check_word() {
     input_field.value = '';
   } 
 
+  if(time === 60 && !timer_running) {
+    timer_running = true;
+    setInterval(function() { if(time > 0) time -= 1; show_timer() }, 1000);
+  }
   print_task();
 }
-  $().ready(show_timer());
+$().ready(show_timer());
 
 function print_task() {
   var wordlist = document.getElementById('speedtest_wordlist');
