@@ -61,10 +61,10 @@ module Typing::Views
               end
             end
             div :class => "col-md-4 col-xs-8", :style => "padding-top: 10px" do
-              ul class: "nav nav-pills" do
+              ul class: "nav nav-pills pull-right" do
                 li.active { a "Home", :href => "#" }
                 li { a "About", :href => "#" }
-                li { a "Fork me on GitHub", :href => "#" }
+                li { a "Fork me on GitHub", :href => "https://github.com/FlopsKa/ruby-typing" }
               end
             end
           end
@@ -79,7 +79,10 @@ module Typing::Views
       div :class => "col-md-8 col-md-offset-2 col-xs-12" do
         form :class => "form-group" do
           label.speedtest_wordlist! "Those are the words you have to enter"
-          input :autofocus => "", :id => "speedtest_input", :class => "form-control", :onkeypress => "setTimeout(check_word, 0)"
+          div class: "input-group" do
+            input :autofocus => "", :id => "speedtest_input", :onkeypress => "setTimeout(check_word, 0)", class: "form-control"
+            span "00", class: "timer input-group-addon"
+          end
         end
         p.speedtest_result! { "Right Words: <br /> Wrong Words:" }
         script :src => "js/jquery-1.10.2.js"

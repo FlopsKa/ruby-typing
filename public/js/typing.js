@@ -1,3 +1,4 @@
+var start_time = 0;
 var all_words = [];
 var input_words = [];
 var curr_word = 0;
@@ -12,10 +13,13 @@ $.ajax({
       all_words += data.words[word].word + " ";
     }
     all_words = all_words.split(" ");
-    console.log(all_words);
     print_task();
   }
 });
+
+function show_timer() {
+  $('.timer').text('60');
+}
 
 function check_word() {
   var input = input_field.value;
@@ -29,6 +33,7 @@ function check_word() {
 
   print_task();
 }
+  $().ready(show_timer());
 
 function print_task() {
   var wordlist = document.getElementById('speedtest_wordlist');
