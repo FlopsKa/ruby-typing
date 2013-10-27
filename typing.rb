@@ -78,7 +78,12 @@ module Typing::Views
     div.row do
       div :class => "col-md-8 col-md-offset-2 col-xs-12" do
         form :class => "form-group" do
-          label.speedtest_wordlist! "Those are the words you have to enter"
+          p.speedtest_wordlist! "Those are the words you have to enter"
+          div.progress do
+            div class: "progress-bar", role: "progressbar", :'aria-valuenow' => "60", 
+              :'aria-valuemin' => "0", :'aria-valuemax' => "200", :style => "width: 60%;" do
+            end
+          end
           div class: "input-group" do
             input :autofocus => "", :id => "speedtest_input", :onkeypress => "setTimeout(check_word, 0)", class: "form-control"
             span "00", class: "timer input-group-addon"

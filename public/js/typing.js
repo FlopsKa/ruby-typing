@@ -1,10 +1,11 @@
+var keystrokes = 1;
 var speed = 0;
 var timer_running = false;
 var time = 60;
 var all_words = [];
 var input_words = [];
 var curr_word = 0;
-var input_field = document.getElementById('speedtest_input');
+var input_field = $('#speedtest_input');
 
 $.ajax({ 
   type: "GET",
@@ -24,17 +25,19 @@ function show_timer() {
 }
 
 function calculate_speed() {
-  console.log("Current speed: " + speed);
+    // extrapolate keystrokes 
+    var strokes_per_minute = keystrokes / (60 - time) * 60;
+    var wpm = strokes_per_minute / 5; 
+    $('.progress-bar').css("width", wpm / 200 * 100 + "%")
 }
-
 function check_word() {
-  var input = input_field.value;
+  var input = input_field.val();
   input_words[curr_word] = input.trim();
 
   // go to next word on <space>
   if(input.slice(-1) == ' ') {
     curr_word += 1;
-    input_field.value = '';
+    input_field.val('');
   } 
 
   if(time === 60 && !timer_running) {
@@ -46,10 +49,14 @@ function check_word() {
 $().ready(show_timer());
 
 function print_task() {
-  var wordlist = document.getElementById('speedtest_wordlist');
+  var wordlist = $('#speedtest_wordlist');
   var output = "";
   var right_words = 0;
+  keystrokes = 0;
   for(var i = 0; i < input_words.length; i++) {
+    if(check_current_word(input_words[i], i)) {
+      keystrokes += input_words[i].length;
+    }
     if(i === curr_word) continue;
     if(check_current_word(input_words[i], i)) {
       output += "<span style=\"color: #0c0;\">" + all_words[i] + "</span> ";
@@ -58,9 +65,10 @@ function print_task() {
       output += "<span style=\"color: #f00;\">" + all_words[i] + "</span> ";
     }
   }
+  calculate_speed();
   output += all_words.slice(curr_word, all_words.length).join(" ");
-  wordlist.innerHTML = output;
-  document.getElementById('speedtest_result').innerHTML = "Right Words: " + right_words;
+  wordlist.html(output);
+  $('#speedtest_result').text("Right Words: " + right_words);
 }
 
 function check_current_word(word, word_position) {
