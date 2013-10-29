@@ -3,3 +3,12 @@
   height: 3em;
   overflow: hidden;
 }
+
+.input-group {
+  width: 60%;
+  margin: 10px auto;
+}
+
+.currentword {
+  background-color: #ccc;
+}
