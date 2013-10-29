@@ -22,7 +22,7 @@ links.each do |link|
   doc = Nokogiri::HTML(open(link))
   result += doc.xpath("//text()").to_s
   puts result
-  rescue OpenURI::HTTPError, Errno::ENOENT => e
+  rescue Exception => e
     puts e
   end
 end

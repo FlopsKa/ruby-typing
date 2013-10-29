@@ -13,7 +13,7 @@ module Typing::Models
         t.integer :mistakes
         t.timestamps
       end
-      File.open("0.txt").each do |word|
+      File.open("all_words.txt").each do |word|
         Words.create(:word => word.chop, :frequency => 0, :mistakes => 0).save
       end
     end
@@ -35,12 +35,12 @@ module Typing::Controllers
     Words = Typing::Models::Words
     def get
       @headers['Content-Type'] = "application/json"
-      @words = []
-      80.times do 
+      words = []
+      300.times do 
         id = 1 + rand(Words.count)
-        @words << { :word => Words.find(id).word, :id => id }
+        words << { :word => Words.find(id).word, :id => id }
       end
-      { :words => @words }.to_json
+      { :words => words }.to_json
     end
   end
 end
@@ -77,22 +77,25 @@ module Typing::Views
   def index
     div.row do
       div :class => "col-md-8 col-md-offset-2 col-xs-12" do
-        form :class => "form-group" do
-          p.speedtest_wordlist! "Those are the words you have to enter"
-          div.progress do
-            div class: "progress-bar", role: "progressbar", :'aria-valuenow' => "60", 
-              :'aria-valuemin' => "0", :'aria-valuemax' => "200", :style => "width: 60%; text-align: left;" do
-              span.speedtest_wpm! "60%", :style => "margin-left: 10px;"
-            end
-          end
-          div class: "input-group" do
-            input :autofocus => "", :id => "speedtest_input", :onkeypress => "setTimeout(check_word, 0)", class: "form-control"
-            span "00", class: "timer input-group-addon"
-          end
+        div.speedtest! do
+          p { "Loading..." }
         end
-        p.speedtest_result! { "" }
+#        form :class => "form-group" do
+#          p.speedtest_wordlist! "Those are the words you have to enter"
+#          div.progress do
+#            div class: "progress-bar", role: "progressbar", :'aria-valuenow' => "60", 
+#              :'aria-valuemin' => "0", :'aria-valuemax' => "200", :style => "width: 60%; text-align: left;" do
+#              span.speedtest_wpm! "60%", :style => "margin-left: 10px;"
+#            end
+#          end
+#          div class: "input-group" do
+#            input :autofocus => "", :id => "speedtest_input", :onkeypress => "setTimeout(check_word, 0)", class: "form-control"
+#            span "00", class: "timer input-group-addon"
+#          end
+#        end
+#        p.speedtest_result! { "" }
         script :src => "js/jquery-1.10.2.js", type: "text/javascript"
-        script :src => "js/typing.js", type: "text/javascript"
+        script :src => "js/words.js", type: "text/javascript"
       end
     end
   end
