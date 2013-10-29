@@ -7,7 +7,7 @@ var allWords = {
     dataType: "json",
     url: "/words",
     success: function(data){        
-      allWords.words = data;
+      allWords.words = data.words;
       task.show();
     },
     error: function(){        
@@ -19,7 +19,12 @@ var allWords = {
 
 var task = {
   show: function() {
-    $('#speedtest').text("Successfully loaded!");
+    var output = "";
+    for(var i = 0; i < allWords.words.length; i++) {
+      output += "<span class=\"\" wordid=\"" + allWords.words[i].id + "\">" + allWords.words[i].word + " </span>";
+    }
+    $('#speedtest').html("<div class=\"task\">" + output + "</div>");
+    $('#speedtest').append("<div class=\"this is the ultimate div\"></div>");
   }
 };
 
@@ -28,6 +33,3 @@ function run() {
 }
 
 $(run());
-
-console.info(allWords);
-

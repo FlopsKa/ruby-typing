@@ -51,6 +51,7 @@ module Typing::Views
       head do
         title { "Ruby Typing Trainer" }
         link :rel => "stylesheet", :type => "text/css", :href => "css/bootstrap.min.css"
+        link :rel => "stylesheet", :type => "text/css", :href => "css/words.css"
       end
       body do
         div :class => "wrap container" do
