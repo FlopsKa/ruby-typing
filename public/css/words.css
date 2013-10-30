@@ -12,3 +12,11 @@
 .currentword {
   background-color: #ccc;
 }
+
+.wrong {
+  color: #f00;
+}
+
+.right {
+  color: #0a0;
+}
