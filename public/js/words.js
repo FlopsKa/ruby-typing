@@ -16,7 +16,6 @@ var allWords = {
     });
   },
   checkWord: function(id, input, length) {
-    console.log("allwords.words[id]" + allWords.words[id]);
     if(allWords.words[id].word.substring(0, length) === input) {
       return true;
     } else {
@@ -41,16 +40,16 @@ var task = {
     var input_field = $('.speedtest_input');
     var input = input_field.val();
 
-    // go to next word on <space>
-    if(input.slice(-1) == ' ') {
+    // go to next word on <space> but not on empty string
+    if(input.slice(-1) == ' ' ) {
       input_field.val('');
-      task.update(input);
+      if(input.trim() != '') {
+        task.update(input);
+      }
     }
 
     // show whether the input is right or wrong
     var input = $('input').val();
-    console.log(input);
-    console.log($('.currentword').attr("wordnum"));
     var curr_word_span = $('.currentword');
     if(!allWords.checkWord(curr_word_span.attr("wordnum"), input, input.length)) {
       curr_word_span.addClass("wrong");
