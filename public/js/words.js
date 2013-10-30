@@ -1,3 +1,24 @@
+var timer = {
+  running: false,
+  show_in: "",
+  time_left: 60,
+  timer_ref: "",
+  update: function() {
+    timer.show_in.text(timer.time_left >= 10 ? timer.time_left : "0" + timer.time_left);
+  },
+  stop: function() {
+  },
+  go: function(show_in) {
+    if(timer.running) {
+      return;
+    } else {
+      timer.show_in = show_in;
+      timer.running = true;
+      timer.timer_ref = setInterval(function() { timer.time_left > 0 ? timer.time_left -= 1 : timer.stop(); timer.update() }, 1000);
+    }
+  }
+};
+
 var allWords = {
   words: [],
 
@@ -39,6 +60,8 @@ var task = {
   input: function() {
     var input_field = $('.speedtest_input');
     var input = input_field.val();
+
+    timer.go($('.timer'));
 
     // go to next word on <space> but not on empty string
     if(input.slice(-1) == ' ' ) {
@@ -84,16 +107,6 @@ var task = {
   }
 };
 
-var time = {
-  running: false,
-  show_in: "",
-  start_time: 60,
-  timer_ref: "",
-  go: function() {
-  },
-  stop: function() {
-  }
-};
 
 var compute = {
   right_words: 0,
