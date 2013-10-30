@@ -66,7 +66,12 @@ var task = {
     // give the span the right color
     if(allWords.checkWord(current_old.attr("wordnum"), input.trim(), allWords.words[current_old.attr("wordnum")].length)) {
       current_old.addClass('right');
+      compute.right_words++;
+      compute.right_keystrokes += input.length;
+    } else {
+      compute.wrong_words++;
     }
+    compute.show();
 
     // move the lines upwards when the cursor jumps to the next line
     if(current_old.offset().top != current.offset().top) {
@@ -75,6 +80,29 @@ var task = {
         $("[wordnum='" + i + "']").remove();
       }
     }
+
+  }
+};
+
+var time = {
+  running: false,
+  show_in: "",
+  start_time: 60,
+  timer_ref: "",
+  go: function() {
+  },
+  stop: function() {
+  }
+};
+
+var compute = {
+  right_words: 0,
+  wrong_words: 0,
+  right_keystrokes: 0,
+  show: function() {
+    console.log("Right Words: " + compute.right_words);
+    console.log("Wrong Words: " + compute.wrong_words);
+    console.log("Keystrokes: " + compute.right_keystrokes);
 
   }
 };
