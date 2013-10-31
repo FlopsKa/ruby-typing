@@ -54,22 +54,30 @@ module Typing::Views
         link :rel => "stylesheet", :type => "text/css", :href => "css/words.css"
       end
       body do
-        div :class => "wrap container" do
-          div :class => "page-header row" do
-            div :class => "col-md-8 col-xs-4" do
-              a :href => "#" do 
-                img :src => "images/ruby-typist.png"
+        div.wrap! do
+          div :class => "container" do
+            div :class => "page-header row" do
+              div :class => "col-md-8 col-xs-4" do
+                a :href => "#" do 
+                  img :src => "images/ruby-typist.png"
+                end
+              end
+              div :class => "col-md-4 col-xs-8", :style => "padding-top: 10px" do
+                ul class: "nav nav-pills pull-right" do
+                  li.active { a "Home", :href => "#" }
+                  li { a "About", :href => "#" }
+                  li { a "Fork me on GitHub", :href => "https://github.com/FlopsKa/ruby-typing" }
+                end
               end
             end
-            div :class => "col-md-4 col-xs-8", :style => "padding-top: 10px" do
-              ul class: "nav nav-pills pull-right" do
-                li.active { a "Home", :href => "#" }
-                li { a "About", :href => "#" }
-                li { a "Fork me on GitHub", :href => "https://github.com/FlopsKa/ruby-typing" }
-              end
-            end
+            self << yield
           end
-          self << yield
+        end
+      end
+      div.container do
+        div.footer! do
+            hr
+            p "Example foobar Copyright", :class => "text-muted credit"
         end
       end
     end
@@ -81,20 +89,6 @@ module Typing::Views
         div.speedtest! do
           p { "Loading..." }
         end
-#        form :class => "form-group" do
-#          p.speedtest_wordlist! "Those are the words you have to enter"
-#          div.progress do
-#            div class: "progress-bar", role: "progressbar", :'aria-valuenow' => "60", 
-#              :'aria-valuemin' => "0", :'aria-valuemax' => "200", :style => "width: 60%; text-align: left;" do
-#              span.speedtest_wpm! "60%", :style => "margin-left: 10px;"
-#            end
-#          end
-#          div class: "input-group" do
-#            input :autofocus => "", :id => "speedtest_input", :onkeypress => "setTimeout(check_word, 0)", class: "form-control"
-#            span "00", class: "timer input-group-addon"
-#          end
-#        end
-#        p.speedtest_result! { "" }
         script :src => "js/jquery-1.10.2.js", type: "text/javascript"
         script :src => "js/words.js", type: "text/javascript"
       end
