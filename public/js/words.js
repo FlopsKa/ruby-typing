@@ -7,6 +7,11 @@ var timer = {
     timer.show_in.text(timer.time_left >= 10 ? timer.time_left : "0" + timer.time_left);
   },
   stop: function() {
+    if(timer.running) {
+      timer.running = false;
+      clearInterval(timer.timer_ref);
+      compute.show();
+    }
   },
   go: function(show_in) {
     if(timer.running) {
@@ -92,9 +97,9 @@ var task = {
       compute.right_words++;
       compute.right_keystrokes += input.length;
     } else {
+      current_old.addClass('wrong');
       compute.wrong_words++;
     }
-    compute.show();
 
     // move the lines upwards when the cursor jumps to the next line
     if(current_old.offset().top != current.offset().top) {
@@ -113,10 +118,12 @@ var compute = {
   wrong_words: 0,
   right_keystrokes: 0,
   show: function() {
-    console.log("Right Words: " + compute.right_words);
-    console.log("Wrong Words: " + compute.wrong_words);
-    console.log("Keystrokes: " + compute.right_keystrokes);
-
+    if($('#speedtest .result').length === 0) {
+      $('#speedtest').append("<div class=\"result\"><p>Right words: " +
+          compute.right_words + "</p><p>Wrong words: " + compute.wrong_words +
+          "</p><p>Right Keystrokes: " + compute.right_keystrokes + "</p><p>WPM: " +
+          compute.right_keystrokes / 5 + "</p></div>");
+    }
   }
 };
 
