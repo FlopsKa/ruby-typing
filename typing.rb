@@ -65,7 +65,7 @@ module Typing::Views
               div :class => "col-md-4 col-xs-8", :style => "padding-top: 10px" do
                 ul class: "nav nav-pills pull-right" do
                   li.active { a "Home", :href => "#" }
-                  li { a "About", :href => "#" }
+                  li { a "Training", :href => "#" }
                   li { a "Fork me on GitHub", :href => "https://github.com/FlopsKa/ruby-typing" }
                 end
               end

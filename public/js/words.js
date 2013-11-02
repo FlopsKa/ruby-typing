@@ -120,10 +120,10 @@ var compute = {
   right_keystrokes: 0,
   show: function() {
     if($('#speedtest .result').length === 0) {
-      $('#speedtest').append("<div class=\"result\"><p>Right words: " +
-          compute.right_words + "</p><p>Wrong words: " + compute.wrong_words +
-          "</p><p>Right Keystrokes: " + compute.right_keystrokes + "</p><p>WPM: " +
-          compute.right_keystrokes / 5 + "</p></div>");
+      $('#speedtest').append("<div class=\"result table\"><table><thead><tr><th>Results</th><th></th></tr></thead><tbody><tr><td>Right words:</td><td>" +
+          compute.right_words + "</td></tr><tr><td>Wrong words:</td><td>" + compute.wrong_words +
+          "</td></tr><tr><td>Right Keystrokes:</td><td>" + compute.right_keystrokes + "</td></tr><tr><td>WPM:</td><td> " +
+          compute.right_keystrokes / 5 + "</td></tr></tbody></table></div>");
     }
   }
 };
