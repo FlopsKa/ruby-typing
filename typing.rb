@@ -36,12 +36,20 @@ module Typing::Controllers
     def get
       @headers['Content-Type'] = "application/json"
       words = []
+			count = Words.count
       300.times do 
-        id = 1 + rand(Words.count)
+        id = 1 + rand(count)
         words << { :word => Words.find(id).word, :id => id }
       end
+			ActiveRecord::Base.connection.close
       { :words => words }.to_json
     end
+		def post
+			p @input
+
+
+			@input.to_json
+		end
   end
 end
 
