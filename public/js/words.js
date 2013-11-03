@@ -10,6 +10,9 @@ var timer = {
     if(timer.running) {
       timer.running = false;
       clearInterval(timer.timer_ref);
+			$.post( "words", { 'ids[]': task.wrong_words_id }).done(function(msg) {
+				console.log(msg);
+			});
       compute.show();
     }
   },
@@ -51,6 +54,7 @@ var allWords = {
 };
 
 var task = {
+	wrong_words_id: [],
   show: function() {
     var output = "";
     for(var i = 0; i < allWords.words.length; i++) {
@@ -99,6 +103,7 @@ var task = {
       compute.right_keystrokes += input.length;
     } else {
       current_old.addClass('wrong');
+			task.wrong_words_id.push(current_old.attr("wordid"));
       compute.wrong_words++;
     }
 
