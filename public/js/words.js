@@ -63,7 +63,7 @@ var task = {
     $('#speedtest').html("<div class=\"task\">" + output + "</div>");
     $('#speedtest').append("<div class=\"word_input\">" +
         "<form class=\"input-group\"><input onkeypress=\"setTimeout(task.input, 0)\" class=\"form-control speedtest_input\" /><span class=\"timer input-group-addon\">60</span>" +
-        "</form></div>");
+        "</form><p class=\"hint\"><small><i>Hint: Press \'Ctrl\' + \'R\' to restart.</i></small></p></div>");
     $('span[wordnum=0]').addClass('currentword');
     $('.speedtest_input').focus();
   },
