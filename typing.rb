@@ -5,6 +5,10 @@ Camping.goes :Typing
 module Typing::Models
 	class Words < Base
 	end
+
+	class Data < Base
+	end
+
 	class BasicFields < V 1.0
 		def self.up
 			create_table Words.table_name do |t|
@@ -20,6 +24,16 @@ module Typing::Models
 
 		def self.down
 			drop_table Words.table_name
+		end
+	end
+
+	class BasicData < V 1.1
+		def self.up
+			create_table Data.table_name do |t|
+				t.integer :wpm
+				t.integer :words_total
+				t.integer :keystrokes_total
+			end
 		end
 	end
 end
@@ -45,10 +59,18 @@ module Typing::Controllers
 			{ :words => words }.to_json
 		end
 		def post
-			p @input
+			@headers['Content-Type'] = "application/json"
+			Data.create(:wpm => @input["wpm"], 
+									:words_total => @input["right_words"],
+									:keystrokes_total => @input["keystrokes"]).save
+			ret = { :avg_wpm => Data.average('wpm').to_s,
+					 :count => Data.count,
+					:sum_words => Data.sum('words_total'),
+					:sum_keystrokes => Data.sum('keystrokes_total')
+			}
 
-
-			@input.to_json
+			ActiveRecord::Base.connection.close
+			ret.to_json
 		end
 	end
 end

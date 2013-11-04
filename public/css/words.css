@@ -49,3 +49,7 @@ body {
 .text-muted {
 	text-align: right;
 }
+
+.table td:nth-child(2) {
+	text-align: right;
+}
