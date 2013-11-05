@@ -9,6 +9,10 @@ module Typing::Models
 	class Data < Base
 	end
 
+	class Mistakes < Base
+		serialize :keystrokes
+	end
+
 	class BasicFields < V 1.0
 		def self.up
 			create_table Words.table_name do |t|
@@ -32,6 +36,22 @@ module Typing::Models
 				t.integer :words_total
 				t.integer :keystrokes_total
 			end
+		end
+
+		def self.down
+			drop_table Data.table_name
+		end
+	end
+	
+	class AddMistakesTable < V 1.2
+		def self.up
+			create_table Mistakes.table_name do |t|
+				t.text :keystrokes
+			end
+		end
+
+		def self.down
+			drop_table Mistakes.table_name
 		end
 	end
 end
@@ -58,6 +78,7 @@ module Typing::Controllers
 		end
 		def post
 			@headers['Content-Type'] = "application/json"
+			p @input
 			Data.create(:wpm => @input["wpm"], 
 									:words_total => @input["right_words"],
 									:keystrokes_total => @input["keystrokes"]).save
@@ -66,6 +87,16 @@ module Typing::Controllers
 					 :sum_words => Data.sum('words_total'),
 					 :sum_keystrokes => Data.sum('keystrokes_total')
 			}
+
+			keys = Hash.new(0)
+			@input.wrong_keys.each do |e|
+				keys[e] = keys[e] + 1
+			end
+			Mistakes.first.keystrokes.each do |k,v|
+				keys[k] += v
+			end
+
+			Mistakes.first.update(:keystrokes => keys)
 
 			ActiveRecord::Base.connection.close
 			ret.to_json
