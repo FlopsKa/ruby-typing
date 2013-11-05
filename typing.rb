@@ -17,9 +17,7 @@ module Typing::Models
 				t.integer :mistakes
 				t.timestamps
 			end
-			File.open("all_words.txt").each do |word|
-				Words.create(:word => word.chop, :frequency => 0, :mistakes => 0).save
-			end
+			insertData
 		end
 
 		def self.down
@@ -65,8 +63,8 @@ module Typing::Controllers
 									:keystrokes_total => @input["keystrokes"]).save
 			ret = { :avg_wpm => Data.average('wpm').to_s,
 					 :count => Data.count,
-					:sum_words => Data.sum('words_total'),
-					:sum_keystrokes => Data.sum('keystrokes_total')
+					 :sum_words => Data.sum('words_total'),
+					 :sum_keystrokes => Data.sum('keystrokes_total')
 			}
 
 			ActiveRecord::Base.connection.close
@@ -111,7 +109,7 @@ module Typing::Views
 							a "GitHub", :href =>"http://github.com/flopska"
 							span { " and " }
 
-						a "Twitter", :href => "http://twitter.com/flopska"
+							a "Twitter", :href => "http://twitter.com/flopska"
 						end
 					end
 				end
@@ -137,3 +135,8 @@ def Typing.create
 end
 
 
+def Typing.insertData
+	File.open("all_words.txt").each do |word|
+		Typing::Models::Words.create(:word => word.chop, :frequency => 0, :mistakes => 0).save
+	end
+end
