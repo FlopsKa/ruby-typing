@@ -53,3 +53,7 @@ body {
 .table td:nth-child(2) {
 	text-align: right;
 }
+
+#speedtest .task {
+	font-family: serif;
+}

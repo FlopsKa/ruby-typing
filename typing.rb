@@ -21,7 +21,7 @@ module Typing::Models
 				t.integer :mistakes
 				t.timestamps
 			end
-			insertData
+			Typing.insertData
 		end
 
 		def self.down
@@ -48,6 +48,7 @@ module Typing::Models
 			create_table Mistakes.table_name do |t|
 				t.text :keystrokes
 			end
+			Mistakes.create(:keystrokes => {})
 		end
 
 		def self.down
