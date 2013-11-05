@@ -15,7 +15,8 @@ var timer = {
 						'ids[]': task.wrong_words_id,
 				'wpm': compute.right_keystrokes / 5,
 				'right_words': compute.right_words,
-				'keystrokes': compute.right_keystrokes}).done(function(msg) {
+				'keystrokes': compute.right_keystrokes,
+					'wrong_keys': compute.wrong_keys}).done(function(msg) {
 					console.log(msg);
 					compute.show(msg);
 				});
@@ -91,6 +92,7 @@ var task = {
 		var curr_word_span = $('.currentword');
 		if(!allWords.checkWord(curr_word_span.attr("wordnum"), input, input.length)) {
 			curr_word_span.addClass("wrong");
+			compute.wrong_keys.push(allWords.words[curr_word_span.attr("wordnum")].word[input.length-1]);
 		} else {
 			curr_word_span.removeClass("wrong");
 		}
@@ -128,15 +130,15 @@ var compute = {
 	right_words: 0,
 	wrong_words: 0,
 	right_keystrokes: 0,
+	wrong_keys: [],
 	show: function(data) {
 		if($('#speedtest .result').length === 0) {
 			$('#speedtest').append("<div class=\"result col-md-6\"><table class=\"table\">" +
 					"<thead><tr><th style=\"width: 100%\">Results</th><th></th></tr></thead>" +
 					"<tbody>" +
 					"<tr><td>WPM:</td><td> " + compute.right_keystrokes / 5 + "</td></tr>" +
-					"<tr><td>Right words:</td><td>" + compute.right_words + "</td></tr>" +
-					"<tr><td>Wrong words:</td><td>" + compute.wrong_words + "</td></tr>" +
-					"<tr><td>Right Keystrokes:</td><td>" + compute.right_keystrokes + "</td></tr>" +
+					"<tr><td>Right words / Keystrokes</td><td><nobr>" + compute.right_words + " / " + compute.right_keystrokes + "</nobr></td></tr>" +
+					"<tr><td>Wrong words / Keystrokes</td><td><nobr>" + compute.wrong_words + " / " + compute.wrong_keys.length + "</nobr></td></tr>" +
 					"</tbody></table></div>" +
 					"" +
 					"<div class=\"overview col-md-6\"><table class=\"table\"><thead><tr><th style=\"width: 100%\">Overview</th><th></th></tr></thead>" +
