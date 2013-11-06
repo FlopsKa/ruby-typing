@@ -79,14 +79,16 @@ module Typing::Controllers
 		end
 		def post
 			@headers['Content-Type'] = "application/json"
-			p @input
+			# should be added to the database class and implemeted cleanly
+			median = Data.all.sort_by(&:wpm)[(Data.count / 2).round][:wpm]
 			Data.create(:wpm => @input["wpm"], 
 									:words_total => @input["right_words"],
 									:keystrokes_total => @input["keystrokes"]).save
 			ret = { :avg_wpm => Data.average('wpm').to_s,
 					 :count => Data.count,
 					 :sum_words => Data.sum('words_total'),
-					 :sum_keystrokes => Data.sum('keystrokes_total')
+					 :sum_keystrokes => Data.sum('keystrokes_total'),
+					 :median => median
 			}
 
 			keys = Hash.new(0)
