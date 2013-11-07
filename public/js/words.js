@@ -146,6 +146,7 @@ var compute = {
 					"<tr><td>Tests taken:</td><td>" + data.count + "</td></tr>" +
 					"<tr><td>Total # of words:</td><td>" + data.sum_words + "</td></tr>" +
 					"<tr><td>Total # of keystrokes:</td><td>" + data.sum_keystrokes + "</td></tr>" +
+					"<tr><td>Median</td><td>" + data.median + "</td></tr>" +
 					"</tbody></table></div>");
 		}
 	}
