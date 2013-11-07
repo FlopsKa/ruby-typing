@@ -48,7 +48,7 @@ module Typing::Models
 			create_table Mistakes.table_name do |t|
 				t.text :keystrokes
 			end
-			Mistakes.create(:keystrokes => {})
+			Mistakes.create(:keystrokes => {}).save
 		end
 
 		def self.down
