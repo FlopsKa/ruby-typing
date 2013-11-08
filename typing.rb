@@ -100,18 +100,17 @@ module Typing::Controllers
 		def post
 			@headers['Content-Type'] = "application/json"
 
+			# log data
 			Data.create(:wpm => @input["wpm"], 
 									:words_total => @input["right_words"],
 									:keystrokes_total => @input["keystrokes"]).save
 
-			keys = Hash.new(0)
+			# compute wrong keystrokes
+			keys = Mistakes.first.keystrokes
+			keys.default = 0
 			@input.wrong_keys.each do |e|
 				keys[e] = keys[e] + 1
 			end
-			Mistakes.first.keystrokes.each do |k,v|
-				keys[k] += v
-			end
-
 			Mistakes.first.update(:keystrokes => keys)
 
 			generate_stats.to_json
