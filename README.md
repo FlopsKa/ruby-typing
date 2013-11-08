@@ -11,9 +11,13 @@ If you have ruby installed the installation is really simple:
     git clone https://github.com/FlopsKa/ruby-typing.git
     cd ruby-typing
     bundle install
+    
+And start the server with:
+
     camping typing.rb
 
-When the server is running visit http://localhost:3301/ and start typing.
+When the server is running visit [http://localhost:3301/](http://localhost:3301/) and start typing.
+To stop the server press `Ctrl + C`.
 
 
 Information
