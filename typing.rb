@@ -1,4 +1,5 @@
 require 'active_support/json'
+require 'ar_result_calculations'
 
 Camping.goes :Typing
 
@@ -68,6 +69,18 @@ module Typing::Helpers
 		end
 		ret
 	end
+
+	def generate_stats
+		data = Data.all
+		ActiveRecord::Base.connection.close
+		{
+		 	:avg_wpm => data.average('wpm').to_s,
+			:count => data.count,
+			:sum_words => data.sum('words_total'),
+			:sum_keystrokes => data.sum('keystrokes_total'),
+			:median => data.median(:wpm, :already_sorted => false)
+		}
+	end
 end
 
 module Typing::Controllers
@@ -86,17 +99,10 @@ module Typing::Controllers
 
 		def post
 			@headers['Content-Type'] = "application/json"
-			# should be added to the database class and implemeted cleanly
-			median = Data.all.sort_by(&:wpm)[(Data.count / 2).round][:wpm]
+
 			Data.create(:wpm => @input["wpm"], 
 									:words_total => @input["right_words"],
 									:keystrokes_total => @input["keystrokes"]).save
-			ret = { :avg_wpm => Data.average('wpm').to_s,
-					 :count => Data.count,
-					 :sum_words => Data.sum('words_total'),
-					 :sum_keystrokes => Data.sum('keystrokes_total'),
-					 :median => median
-			}
 
 			keys = Hash.new(0)
 			@input.wrong_keys.each do |e|
@@ -108,8 +114,7 @@ module Typing::Controllers
 
 			Mistakes.first.update(:keystrokes => keys)
 
-			ActiveRecord::Base.connection.close
-			ret.to_json
+			generate_stats.to_json
 		end
 	end
 end
