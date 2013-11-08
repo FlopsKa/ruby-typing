@@ -57,6 +57,19 @@ module Typing::Models
 	end
 end
 
+module Typing::Helpers
+	def generate_wordlist
+		words = Words.all.shuffle
+		ActiveRecord::Base.connection.close
+
+		ret = []
+		words.each do |w|
+			ret << { :word => w.word, :id => w.id }
+		end
+		ret
+	end
+end
+
 module Typing::Controllers
 	class Index < R '/'
 		def get
@@ -64,19 +77,13 @@ module Typing::Controllers
 		end
 	end
 
-	class Words < R '/words'
+	class Wordlist < R '/words'
 		Words = Typing::Models::Words
 		def get
 			@headers['Content-Type'] = "application/json"
-			words = []
-			count = Words.count
-			300.times do 
-				id = 1 + rand(count)
-				words << { :word => Words.find(id).word, :id => id }
-			end
-			ActiveRecord::Base.connection.close
-			{ :words => words }.to_json
+			{ :words => generate_wordlist }.to_json
 		end
+
 		def post
 			@headers['Content-Type'] = "application/json"
 			# should be added to the database class and implemeted cleanly
