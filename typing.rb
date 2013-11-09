@@ -59,26 +59,34 @@ module Typing::Models
 end
 
 module Typing::Helpers
-	def generate_wordlist
+	def generate_wordlist(sort_by_error = false)
 		words = Words.all.shuffle
+
+		# finds the most frequent wrongly entered key
+		mistake = Mistakes.first.keystrokes.sort_by(&:last).reverse[0][0] unless Mistakes.first.keystrokes.empty?
 		ActiveRecord::Base.connection.close
 
 		ret = []
 		words.each do |w|
-			ret << { :word => w.word, :id => w.id }
+			if sort_by_error 
+				ret << { :word => w.word, :id => w.id } if /#{mistake}/ =~ w.word
+			else
+				ret << { :word => w.word, :id => w.id } 
+			end
 		end
 		ret
 	end
 
 	def generate_stats
-		data = Data.all
+		alldata = Data.all
+		newdata = Data.last(50)
 		ActiveRecord::Base.connection.close
 		{
-		 	:avg_wpm => data.average('wpm').to_s,
-			:count => data.count,
-			:sum_words => data.sum('words_total'),
-			:sum_keystrokes => data.sum('keystrokes_total'),
-			:median => data.median(:wpm, :already_sorted => false)
+		 	:avg_wpm => newdata.average('wpm').to_s,
+			:count => alldata.count,
+			:sum_words => alldata.sum('words_total'),
+			:sum_keystrokes => alldata.sum('keystrokes_total'),
+			:median => newdata.median(:wpm, :already_sorted => false)
 		}
 	end
 end
@@ -113,7 +121,16 @@ module Typing::Controllers
 			end
 			Mistakes.first.update(:keystrokes => keys)
 
+			ActiveRecord::Base.connection.close
+
 			generate_stats.to_json
+		end
+	end
+	
+	class Training < R '/training'
+		def get
+			@headers['Content-Type'] = "application/json"
+			{ :words => generate_wordlist(true) }.to_json
 		end
 	end
 end
@@ -137,8 +154,8 @@ module Typing::Views
 							end
 							div :class => "col-md-4 col-xs-8", :style => "padding-top: 10px" do
 								ul class: "nav nav-pills pull-right" do
-									li.active { a "Home", :href => "#" }
-									li { a "Training", :href => "#" }
+									li.active { a "Home", :href => "http://localhost:3301/" }
+									li { a "Training", :href => "http://localhost:3301/training" }
 									li { a "Fork me on GitHub", :href => "https://github.com/FlopsKa/ruby-typing" }
 								end
 							end

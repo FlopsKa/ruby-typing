@@ -40,7 +40,7 @@ var allWords = {
 		$.ajax({ 
 			type: "GET",
 		dataType: "json",
-		url: "/words",
+		url: "/training",
 		success: function(data){        
 			allWords.words = data.words;
 			task.show();
