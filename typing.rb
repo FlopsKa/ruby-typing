@@ -98,6 +98,13 @@ module Typing::Controllers
 		end
 	end
 
+	class Statistics < R '/stats'
+		def get
+			@mistakes = Mistakes.first.keystrokes
+			render :stats
+		end
+	end
+
 	class Wordlist < R '/words'
 		Words = Typing::Models::Words
 		def get
@@ -147,15 +154,16 @@ module Typing::Views
 				div.wrap! do
 					div :class => "container" do
 						div :class => "page-header row" do
-							div :class => "col-md-8 col-xs-4" do
+							div :class => "col-md-6 col-xs-4" do
 								a :href => "#" do 
 									img :src => "images/ruby-typist.png"
 								end
 							end
-							div :class => "col-md-4 col-xs-8", :style => "padding-top: 10px" do
+							div :class => "col-md-6 col-xs-8", :style => "padding-top: 10px" do
 								ul class: "nav nav-pills pull-right" do
-									li.active { a "Home", :href => "http://localhost:3301/" }
+									li { a "Home", :href => "http://localhost:3301/" }
 									li { a "Training", :href => "http://localhost:3301/training" }
+									li { a "Statistics", :href => "http://localhost:3301/stats" }
 									li { a "Fork me on GitHub", :href => "https://github.com/FlopsKa/ruby-typing" }
 								end
 							end
@@ -179,6 +187,7 @@ module Typing::Views
 		end
 	end
 
+
 	def index
 		div.row do
 			div :class => "col-md-8 col-md-offset-2 col-xs-12" do
@@ -187,6 +196,29 @@ module Typing::Views
 				end
 				script :src => "js/jquery-1.10.2.js", type: "text/javascript"
 				script :src => "js/words.js", type: "text/javascript"
+			end
+		end
+	end
+
+	def stats
+		div :class => "col-md-8 col-md-offset-2 col-xs-12" do
+			div :class => "col-md-6" do
+				table.table do
+					thead do
+						tr do
+							th "Mistake Frequency (Reset)"
+							th ""
+						end
+					end
+					tbody do
+						@mistakes.sort_by(&:last).reverse.each do |m|
+							tr do
+								td m[0]
+								td m[1]
+							end
+						end
+					end
+				end
 			end
 		end
 	end
