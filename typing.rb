@@ -98,6 +98,14 @@ module Typing::Controllers
 		end
 	end
 
+	class Reset < R '/reset'
+		def get
+			Mistakes.first.update(:keystrokes => {})
+			ActiveRecord::Base.connection.close
+			redirect R(Statistics)
+		end
+	end
+
 	class Statistics < R '/stats'
 		def get
 			@mistakes = Mistakes.first.keystrokes
