@@ -214,15 +214,20 @@ module Typing::Views
 				table.table do
 					thead do
 						tr do
-							th "Mistake Frequency (Reset)"
+							th do
+								span "Mistake Frequency " 
+								a "Reset", :href => "/reset"
+							end
 							th ""
 						end
 					end
 					tbody do
-						@mistakes.sort_by(&:last).reverse.each do |m|
-							tr do
-								td m[0]
-								td m[1]
+						if @mistakes.count > 0
+							@mistakes.sort_by(&:last).reverse.each do |m|
+								tr do
+									td m[0]
+									td m[1]
+								end
 							end
 						end
 					end
