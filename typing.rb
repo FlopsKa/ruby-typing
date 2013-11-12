@@ -102,13 +102,15 @@ module Typing::Controllers
 		def get
 			Mistakes.first.update(:keystrokes => {})
 			ActiveRecord::Base.connection.close
-			redirect R(Statistics)
+			redirect R(Index)
 		end
 	end
 
 	class Statistics < R '/stats'
 		def get
 			@mistakes = Mistakes.first.keystrokes
+			@mistakes_total = @mistakes.map(&:last).sum
+			ActiveRecord::Base.connection.close
 			render :stats
 		end
 	end
@@ -226,7 +228,7 @@ module Typing::Views
 							@mistakes.sort_by(&:last).reverse.each do |m|
 								tr do
 									td m[0]
-									td m[1]
+									td (m[1].to_f / @mistakes_total * 100).round(2).to_s + '%'
 								end
 							end
 						end
