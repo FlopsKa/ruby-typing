@@ -108,7 +108,7 @@ module Typing::Controllers
 
 	class Statistics < R '/stats'
 		def get
-			@mistakes = Mistakes.first.keystrokes
+			@mistakes = Mistakes.first.keystrokes.sort_by(&:last).reverse
 			@mistakes_total = @mistakes.map(&:last).sum
 			ActiveRecord::Base.connection.close
 			render :stats
@@ -172,7 +172,7 @@ module Typing::Views
 							div :class => "col-md-6 col-xs-8", :style => "padding-top: 10px" do
 								ul class: "nav nav-pills pull-right" do
 									li { a "Home", :href => "http://localhost:3301/" }
-									li { a "Training", :href => "http://localhost:3301/training" }
+									# li { a "Training", :href => "http://localhost:3301/training" }
 									li { a "Statistics", :href => "http://localhost:3301/stats" }
 									li { a "Fork me on GitHub", :href => "https://github.com/FlopsKa/ruby-typing" }
 								end
@@ -217,20 +217,24 @@ module Typing::Views
 					thead do
 						tr do
 							th do
-								span "Mistake Frequency " 
+								span "Most common mistakes " 
+							end
+							th :style => "text-align: right;" do
 								a "Reset", :href => "/reset"
 							end
-							th ""
 						end
 					end
 					tbody do
-						if @mistakes.count > 0
-							@mistakes.sort_by(&:last).reverse.each do |m|
+						if @mistakes.count >= 6
+							6.times do |t|
 								tr do
-									td m[0]
-									td (m[1].to_f / @mistakes_total * 100).round(2).to_s + '%'
+									td @mistakes[t][0]
+									td (@mistakes[t][1].to_f / @mistakes_total * 100).round(2).to_s + '%'
 								end
 							end
+						else
+							td "Run more tests to see your results"
+							td ""
 						end
 					end
 				end
