@@ -110,6 +110,8 @@ module Typing::Controllers
 		def get
 			@mistakes = Mistakes.first.keystrokes.sort_by(&:last).reverse
 			@mistakes_total = @mistakes.map(&:last).sum
+			@speed = Data.last(50).inject([]) { |r,e| r << [r.count, e[:wpm]] }
+			@speed_max = Data.last(50).max(:wpm)
 			ActiveRecord::Base.connection.close
 			render :stats
 		end
@@ -239,7 +241,21 @@ module Typing::Views
 					end
 				end
 			end
+			div :class => "col-md-6", :style => "padding-top: 8px;" do
+				p do
+					b "Words per minute (last 50 tests)"
+				end
+				div.placeholder! :style => "height: 200px;" do
+				end
+			end
 		end
+	script :src => "js/jquery-1.10.2.js", type: "text/javascript"
+	script :src => "js/flot/jquery.flot.js", type: "text/javascript"
+	script do
+		"var options = { yaxis: { max: #@speed_max + 20 }	, xaxis: { max: 50 }};" +
+		"var data = [#@speed];" +
+		"$.plot($(\"#placeholder\"), data, options);"
+	end
 	end
 end
 
