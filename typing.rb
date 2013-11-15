@@ -43,7 +43,7 @@ module Typing::Models
 			drop_table Data.table_name
 		end
 	end
-	
+
 	class AddMistakesTable < V 1.2
 		def self.up
 			create_table Mistakes.table_name do |t|
@@ -64,7 +64,6 @@ module Typing::Helpers
 
 		# finds the most frequent wrongly entered key
 		mistake = Mistakes.first.keystrokes.sort_by(&:last).reverse[0][0] unless Mistakes.first.keystrokes.empty?
-		ActiveRecord::Base.connection.close
 
 		ret = []
 		words.each do |w|
@@ -74,7 +73,19 @@ module Typing::Helpers
 				ret << { :word => w.word, :id => w.id } 
 			end
 		end
+		ActiveRecord::Base.connection.close
 		ret
+	end
+
+	def generate_overview
+		alldata = Data.all
+		newdata = Data.last(50)
+		@avg_wpm = newdata.average('wpm').to_s
+		@count = alldata.count
+		@sum_words = alldata.sum('words_total')
+		@sum_keystrokes = alldata.sum('keystrokes_total')
+		@median = newdata.median(:wpm, :already_sorted => false)
+		ActiveRecord::Base.connection.close
 	end
 
 	def generate_stats
@@ -82,7 +93,7 @@ module Typing::Helpers
 		newdata = Data.last(50)
 		ActiveRecord::Base.connection.close
 		{
-		 	:avg_wpm => newdata.average('wpm').to_s,
+			:avg_wpm => newdata.average('wpm').to_s,
 			:count => alldata.count,
 			:sum_words => alldata.sum('words_total'),
 			:sum_keystrokes => alldata.sum('keystrokes_total'),
@@ -112,6 +123,7 @@ module Typing::Controllers
 			@mistakes_total = @mistakes.map(&:last).sum
 			@speed = Data.last(50).inject([]) { |r,e| r << [r.count, e[:wpm]] }
 			@speed_max = Data.last(50).max(:wpm)
+			generate_overview
 			ActiveRecord::Base.connection.close
 			render :stats
 		end
@@ -145,7 +157,7 @@ module Typing::Controllers
 			generate_stats.to_json
 		end
 	end
-	
+
 	class Training < R '/training'
 		def get
 			@headers['Content-Type'] = "application/json"
@@ -214,48 +226,84 @@ module Typing::Views
 
 	def stats
 		div :class => "col-md-8 col-md-offset-2 col-xs-12" do
-			div :class => "col-md-6" do
-				table.table do
-					thead do
-						tr do
-							th do
-								span "Most common mistakes " 
+			div.row do
+				div :class => "col-md-6" do
+					table.table do
+						thead do
+							tr do
+								th do
+									span "Most common mistakes " 
+								end
+								th :style => "text-align: right;" do
+									a "Reset", :href => "/reset"
+								end
 							end
-							th :style => "text-align: right;" do
-								a "Reset", :href => "/reset"
+						end
+						tbody do
+							if @mistakes.count >= 6
+								6.times do |t|
+									tr do
+										td @mistakes[t][0]
+										td (@mistakes[t][1].to_f / @mistakes_total * 100).round(2).to_s + '%'
+									end
+								end
+							else
+								td "Run more tests to see your results"
+								td ""
 							end
 						end
 					end
-					tbody do
-						if @mistakes.count >= 6
-							6.times do |t|
-								tr do
-									td @mistakes[t][0]
-									td (@mistakes[t][1].to_f / @mistakes_total * 100).round(2).to_s + '%'
-								end
-							end
-						else
-							td "Run more tests to see your results"
-							td ""
-						end
+				end
+				div :class => "col-md-6", :style => "padding-top: 8px;" do
+					p do
+						b "Words per minute (last 50 tests)"
+					end
+					div.placeholder! :style => "height: 200px;" do
 					end
 				end
 			end
-			div :class => "col-md-6", :style => "padding-top: 8px;" do
-				p do
-					b "Words per minute (last 50 tests)"
-				end
-				div.placeholder! :style => "height: 200px;" do
+			div.row do
+				div :class => "col-md-12" do
+					table.table do
+						thead do
+							tr do
+								th "Overview"
+								th ""
+							end
+						end
+						tbody do
+							tr do
+								td "Average WPM:"
+								td "#@avg_wpm"
+							end
+							tr do
+								td "Tests taken:"
+								td "#@count"
+							end
+							tr do
+								td "Total # of words:"
+								td "#@sum_words"
+							end
+							tr do
+								td "Total # of keystrokes"
+								td "#@sum_keystrokes"
+							end
+							tr do
+								td "Median"
+								td "#@median"
+							end
+						end
+					end
 				end
 			end
 		end
-	script :src => "js/jquery-1.10.2.js", type: "text/javascript"
-	script :src => "js/flot/jquery.flot.js", type: "text/javascript"
-	script do
-		"var options = { yaxis: { max: #@speed_max + 20 }	, xaxis: { max: 50 }};" +
-		"var data = [#@speed];" +
-		"$.plot($(\"#placeholder\"), data, options);"
-	end
+		script :src => "js/jquery-1.10.2.js", type: "text/javascript"
+		script :src => "js/flot/jquery.flot.js", type: "text/javascript"
+		script do
+			"var options = { yaxis: { max: #@speed_max + 20 }	, xaxis: { max: 50 }};" +
+			"var data = [#@speed];" +
+				"$.plot($(\"#placeholder\"), data, options);"
+		end
 	end
 end
 
