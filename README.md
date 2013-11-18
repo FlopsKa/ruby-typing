@@ -22,5 +22,8 @@ To stop the server press `Ctrl + C`.
 
 Information
 -----------
-The trainer analyzes your wrong keystrokes and the next version will
-feature a Training-Mode to get rid of them.
+The program analyzes your wrong keyboards and shows the most frequent 
+mistakes you make. Use that to get rid of them.
+
+The 'Statistics' page also features a graph to visualize your speed
+improvements.
