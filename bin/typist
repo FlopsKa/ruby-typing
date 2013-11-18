@@ -1,6 +1,0 @@
-#!/usr/bin/env ruby
-require File.dirname(__FILE__) + '/../lib/typist'
-
-app = Typist.new(ARGV, Kernel)
-puts app.task
-app.interpret($stdin.gets.chomp)
