@@ -1,7 +1,17 @@
 require 'active_support/json'
 require 'ar_result_calculations'
 
+module Typing
+  def service(*args)
+    super(*args) # if we overwrote App::Base#service, we have no place to call super
+		ActiveRecord::Base.connection.close
+		self
+  end
+end
+
 module Typing::Controllers
+
+
 	class Index < R '/'
 		def get
 			render :index
@@ -11,7 +21,6 @@ module Typing::Controllers
 	class Reset < R '/reset'
 		def get
 			Mistakes.first.update(:keystrokes => {})
-			ActiveRecord::Base.connection.close
 			redirect R(Index)
 		end
 	end
@@ -23,13 +32,11 @@ module Typing::Controllers
 			@speed = Data.last(50).inject([]) { |r,e| r << [r.count, e[:wpm]] }
 			@speed_max = Data.last(50).max(:wpm)
 			generate_overview
-			ActiveRecord::Base.connection.close
 			render :stats
 		end
 	end
 
 	class Wordlist < R '/words'
-		Words = Typing::Models::Words
 		def get
 			@headers['Content-Type'] = "application/json"
 			{ :words => generate_wordlist }.to_json
@@ -50,8 +57,6 @@ module Typing::Controllers
 				keys[e] = keys[e] + 1
 			end
 			Mistakes.first.update(:keystrokes => keys)
-
-			ActiveRecord::Base.connection.close
 
 			generate_stats.to_json
 		end

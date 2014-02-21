@@ -16,7 +16,6 @@ module Typing::Helpers
 				ret << { :word => w.word, :id => w.id } 
 			end
 		end
-		ActiveRecord::Base.connection.close
 		ret
 	end
 
@@ -28,13 +27,11 @@ module Typing::Helpers
 		@sum_words = alldata.sum('words_total')
 		@sum_keystrokes = alldata.sum('keystrokes_total')
 		@median = newdata.median(:wpm, :already_sorted => false)
-		ActiveRecord::Base.connection.close
 	end
 
 	def generate_stats
 		alldata = Data.all
 		newdata = Data.last(50)
-		ActiveRecord::Base.connection.close
 		{
 			:avg_wpm => newdata.average('wpm').to_s,
 			:count => alldata.count,
