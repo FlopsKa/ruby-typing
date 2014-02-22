@@ -20,8 +20,8 @@ window.
 
 Information
 -----------
-The program analyzes your wrong characters and shows the most frequent 
-mistakes you made on the 'Statistics' page. Use that to your advantage
+The program analyzes your wrongly typed characters and sums up the most 
+frequent mistakes on the 'Statistics' page. Use that to your advantage
 and get rid of them.
 
 When you don't want to supply your own wordlist you can use the included
