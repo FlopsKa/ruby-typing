@@ -8,6 +8,7 @@ gem "activerecord"
 gem "sinatra-activerecord"
 gem 'sinatra-flash'
 gem 'sinatra-redirect-with-flash'
+gem 'ar_result_calculations'
 
 group :development do
  gem 'sqlite3'

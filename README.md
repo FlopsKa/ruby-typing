@@ -11,19 +11,15 @@ If you already have [ruby](https://www.ruby-lang.org/) the installation is reall
     
 After you entered those commands into the console you can run the program with:
 
-    camping typing.rb
+    ruby app.rb
 
-When the server is running visit [http://localhost:3301/](http://localhost:3301/) 
+When the server is running visit [http://localhost:4567/](http://localhost:4567/) 
 and start typing. To stop the server press `Ctrl + C` in your terminal 
 window.
 
 
 Information
 -----------
-The program analyzes your wrongly typed characters and sums up the most 
-frequent mistakes on the 'Statistics' page. Use that to your advantage
-and get rid of them.
-
 When you don't want to supply your own wordlist you can use the included
 one. It's auto generated and features the most common english words.
 
