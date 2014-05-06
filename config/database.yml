@@ -1,0 +1,11 @@
+development:
+  adapter: sqlite3
+  encoding: utf8
+  database: dev.db
+  show_exceptions: true
+
+test:
+  adapter: sqlite3
+  database: ":memory:"
+  timeout: 500
+
