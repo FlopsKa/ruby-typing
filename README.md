@@ -1,6 +1,8 @@
 Ruby Typing Trainer
 ===================
 
+[![Build Status](https://travis-ci.org/FlopsKa/ruby-typing.svg?branch=master)](https://travis-ci.org/FlopsKa/ruby-typing)
+
 Installation
 ------------
 If you already have [ruby](https://www.ruby-lang.org/) the installation is really simple:
