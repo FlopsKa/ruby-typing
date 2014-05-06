@@ -27,6 +27,7 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
+    rake (10.3.1)
     ripl (0.7.0)
       bond (~> 0.4.2)
     ripl-multi_line (0.3.1)
@@ -63,6 +64,7 @@ PLATFORMS
 DEPENDENCIES
   ar_result_calculations
   pg
+  rake
   sinatra
   sinatra-activerecord
   sinatra-flash
